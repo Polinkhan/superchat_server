@@ -34,6 +34,12 @@ io.on("connection", (socket) => {
     socket.to(id).emit("privateMsgRec", users[socket.id], socket.id, massege);
   });
 
+  socket.on("clearMsg", () => {
+    groupMassages = [];
+    socket.broadcast.emit("receive", groupMassages);
+    socket.emit("receive", groupMassages);
+  });
+
   // socket.on("sendImg", (imgSrc) => {
   //   socket.broadcast.emit("receiveImg", imgSrc, user[socket.id]);
   // });
