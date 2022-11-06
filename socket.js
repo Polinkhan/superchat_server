@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 let port = process.env.PORT || 8000;
-const io = new Server(port, { cors: { origin: "*" } });
+const io = new Server(port, { cors: { origin: "http://localhost:3000" } });
 
 // let users = [];
 let Users = { group: "Group Chat" };
