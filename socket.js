@@ -1,37 +1,33 @@
 const { Server } = require("socket.io");
+let port = process.env.PORT || 8000;
+const io = new Server(port, { cors: { origin: "*" } });
 
 // let users = [];
-let users = { group: "Group Chat" };
+let Users = { group: "Group Chat" };
 
 let groupMassages = [];
 
-let port = process.env.PORT || 8000;
-
-const io = new Server(port, { cors: { origin: "*" } });
-
 io.on("connection", (socket) => {
   socket.on("new-user-joined", (name) => {
-    users[socket.id] = name;
-    // Massages[socket.id] = [];
-    // users.push({ id: socket.id, name: name });
-    socket.broadcast.emit("user-joined", users, groupMassages, socket.id);
+    Users[socket.id] = name;
+    const newUser = { [socket.id]: name };
+    socket.broadcast.emit("user-joined", newUser, socket.id);
+    console.log(Users);
   });
 
-  // socket.on("ActiveUserNumer", () => {
-  //   socket.emit("receiveActiveUserNumer", Object.keys(user).length);
-  // });
-
-  socket.on("requstUserData", () => {
-    socket.emit("getUser", users, socket.id, groupMassages);
+  socket.on("requstUsersData", () => {
+    console.log(Users);
+    socket.emit("getUsersData", Users, socket.id, groupMassages);
   });
 
   socket.on("send", (massege) => {
-    groupMassages.push({ name: users[socket.id], id: socket.id, msg: massege });
+    groupMassages.push({ name: Users[socket.id], id: socket.id, msg: massege });
     socket.broadcast.emit("receive", groupMassages);
   });
 
   socket.on("privateMsg", (id, massege) => {
-    socket.to(id).emit("privateMsgRec", users[socket.id], socket.id, massege);
+    const msg = { name: Users[socket.id], id: socket.id, msg: massege };
+    socket.to(id).emit("privateMsgRec", msg, socket.id);
   });
 
   socket.on("clearMsg", () => {
@@ -59,7 +55,8 @@ io.on("connection", (socket) => {
     //   return user.id !== socket.id;
     // });
     // users = updateUsers;
-    delete users[socket.id];
-    socket.broadcast.emit("updateUser", users, groupMassages);
+    delete Users[socket.id];
+    console.log(Users);
+    socket.broadcast.emit("updateUser", socket.id);
   });
 });
