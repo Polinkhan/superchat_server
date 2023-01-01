@@ -1,8 +1,8 @@
-const { Server } = require("socket.io");
-let port = process.env.PORT || 8000;
-const io = new Server(port, {
+const httpServer = require("http").createServer();
+const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "*",
+    origin: "http://localhost:3000" || "https://polinkhan.github.io/superchat",
+    methods: ["GET", "POST"],
     allowedHeaders: ["my-custom-header"],
     credentials: true,
   },
@@ -47,3 +47,5 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("updateUser", socket.id);
   });
 });
+
+httpServer.listen(5000);
