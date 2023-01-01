@@ -8,7 +8,6 @@ const io = new Server(port, {
   },
 });
 
-// let users = [];
 let Users = { group: "Group Chat" };
 
 let groupMassages = [];
@@ -42,25 +41,7 @@ io.on("connection", (socket) => {
     socket.emit("receive", groupMassages);
   });
 
-  // socket.on("sendImg", (imgSrc) => {
-  //   socket.broadcast.emit("receiveImg", imgSrc, user[socket.id]);
-  // });
-
-  // socket.on("typing", (name) => {
-  //   socket.broadcast.emit("userIsTyping", name, socket.id, user);
-  // });
-
-  // socket.on("stopTyping", (name) => {
-  //   socket.broadcast.emit("userStopedTyping", socket.id, user);
-  // });
-
   socket.on("disconnect", () => {
-    // socket.broadcast.emit("userLeave", user[socket.id], socket.id, user);
-    // socket.broadcast.emit("userStopedTyping", socket.id, user);
-    // const updateUsers = users.filter((user) => {
-    //   return user.id !== socket.id;
-    // });
-    // users = updateUsers;
     delete Users[socket.id];
     console.log(Users);
     socket.broadcast.emit("updateUser", socket.id);
