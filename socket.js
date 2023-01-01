@@ -1,4 +1,4 @@
-const httpServer = require("http").createServer();
+const httpServer = require("https").createServer();
 const io = require("socket.io")(httpServer, {
   cors: {
     origin: "http://localhost:3000" || "https://polinkhan.github.io/superchat",
